@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { CheckCircle, X } from 'lucide-react';
 
-interface NotificationToastProps {
-  message: string;
-  type: 'success' | 'error';
-  isVisible: boolean;
-  onClose: () => void;
-}
-
-const NotificationToast: React.FC<NotificationToastProps> = ({
+const NotificationToast = ({
   message,
   type,
   isVisible,
@@ -26,9 +19,11 @@ const NotificationToast: React.FC<NotificationToastProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className={`fixed top-20 right-4 z-50 flex items-center space-x-2 px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${
-      type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-    } ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
+    <div
+      className={`fixed top-20 right-4 z-50 flex items-center space-x-2 px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+      } ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+    >
       <CheckCircle size={20} />
       <span className="font-medium">{message}</span>
       <button

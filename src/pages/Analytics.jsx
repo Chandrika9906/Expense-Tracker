@@ -4,23 +4,23 @@ import { formatIndianCurrency, getCategoryColor, getCategoryIcon } from '../util
 import { getMonthName, getCurrentYear } from '../utils/dateUtils';
 import { TrendingUp, TrendingDown, PieChart, Calendar, Target } from 'lucide-react';
 
-const Analytics: React.FC = () => {
+const Analytics = () => {
   const { state } = useExpenses();
   const [selectedYear, setSelectedYear] = useState(getCurrentYear());
 
   const analytics = useMemo(() => {
-    const yearExpenses = state.expenses.filter(expense => 
-      new Date(expense.date).getFullYear() === selectedYear
+    const yearExpenses = state.expenses.filter(
+      expense => new Date(expense.date).getFullYear() === selectedYear
     );
 
     // Category breakdown
     const categoryTotals = yearExpenses.reduce((acc, expense) => {
       acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
       return acc;
-    }, {} as { [key: string]: number });
+    }, {});
 
     const totalAmount = Object.values(categoryTotals).reduce((sum, amount) => sum + amount, 0);
-    
+
     const categoryBreakdown = Object.entries(categoryTotals)
       .map(([category, amount]) => ({
         category,
@@ -39,9 +39,7 @@ const Analytics: React.FC = () => {
     const monthlyData = monthlyTotals.map((amount, index) => ({
       month: getMonthName(index),
       amount,
-      expenses: yearExpenses.filter(expense => 
-        new Date(expense.date).getMonth() === index
-      ).length
+      expenses: yearExpenses.filter(expense => new Date(expense.date).getMonth() === index).length
     }));
 
     // Trends
@@ -49,14 +47,17 @@ const Analytics: React.FC = () => {
     const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
     const currentMonthTotal = monthlyTotals[currentMonth];
     const lastMonthTotal = monthlyTotals[lastMonth];
-    const monthlyTrend = lastMonthTotal > 0 ? ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : 0;
+    const monthlyTrend =
+      lastMonthTotal > 0 ? ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100 : 0;
 
-    const maxMonth = monthlyData.reduce((max, month) => 
-      month.amount > max.amount ? month : max, monthlyData[0]);
+    const maxMonth = monthlyData.reduce(
+      (max, month) => (month.amount > max.amount ? month : max),
+      monthlyData[0]
+    );
     const avgMonthly = totalAmount / 12;
 
     // Available years
-    const availableYears = [...new Set(state.expenses.map(expense => 
+    const availableYears = [...new Set(state.expenses.map(expense =>
       new Date(expense.date).getFullYear()
     ))].sort((a, b) => b - a);
 

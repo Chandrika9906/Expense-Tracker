@@ -5,12 +5,12 @@ import { formatDate, formatDateForInput } from '../utils/dateUtils';
 import { Search, Edit2, Trash2, Filter, X, Check } from 'lucide-react';
 import NotificationToast from '../components/NotificationToast';
 
-const ViewExpenses: React.FC = () => {
+const ViewExpenses = () => {
   const { state, updateExpense, deleteExpense } = useExpenses();
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({
     amount: '',
     description: '',
@@ -22,11 +22,12 @@ const ViewExpenses: React.FC = () => {
 
   const filteredExpenses = useMemo(() => {
     return state.expenses.filter(expense => {
-      const matchesSearch = expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           expense.category.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        expense.category.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = !categoryFilter || expense.category === categoryFilter;
       const matchesDate = !dateFilter || expense.date.includes(dateFilter);
-      
+
       return matchesSearch && matchesCategory && matchesDate;
     });
   }, [state.expenses, searchTerm, categoryFilter, dateFilter]);
@@ -35,7 +36,7 @@ const ViewExpenses: React.FC = () => {
     return filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
   }, [filteredExpenses]);
 
-  const handleEdit = (expense: any) => {
+  const handleEdit = (expense) => {
     setEditingId(expense.id);
     setEditForm({
       amount: expense.amount.toString(),
@@ -64,7 +65,7 @@ const ViewExpenses: React.FC = () => {
     setEditForm({ amount: '', description: '', category: '', date: '' });
   };
 
-  const handleDelete = (id: string, description: string) => {
+  const handleDelete = (id, description) => {
     if (window.confirm(`Are you sure you want to delete "${description}"?`)) {
       deleteExpense(id);
       setToastMessage('Expense deleted successfully! 🗑️');
@@ -106,7 +107,10 @@ const ViewExpenses: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Search description or category..."
@@ -123,7 +127,7 @@ const ViewExpenses: React.FC = () => {
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           >
             <option value="">All Categories</option>
-            {state.categories.map(category => (
+            {state.categories.map((category) => (
               <option key={category} value={category}>{category}</option>
             ))}
           </select>
@@ -154,7 +158,10 @@ const ViewExpenses: React.FC = () => {
       {filteredExpenses.length > 0 ? (
         <div className="space-y-4">
           {filteredExpenses.map((expense) => (
-            <div key={expense.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            <div
+              key={expense.id}
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
               {editingId === expense.id ? (
                 /* Edit Mode */
                 <div className="p-6 border-l-4 border-orange-500">
@@ -162,30 +169,30 @@ const ViewExpenses: React.FC = () => {
                     <input
                       type="number"
                       value={editForm.amount}
-                      onChange={(e) => setEditForm({...editForm, amount: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, amount: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                       placeholder="Amount"
                     />
                     <input
                       type="text"
                       value={editForm.description}
-                      onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                       placeholder="Description"
                     />
                     <select
                       value={editForm.category}
-                      onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                     >
-                      {state.categories.map(category => (
+                      {state.categories.map((category) => (
                         <option key={category} value={category}>{category}</option>
                       ))}
                     </select>
                     <input
                       type="date"
                       value={editForm.date}
-                      onChange={(e) => setEditForm({...editForm, date: e.target.value})}
+                      onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
@@ -219,14 +226,14 @@ const ViewExpenses: React.FC = () => {
                         <p className="text-gray-400 text-xs">{formatDate(expense.date)}</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-4">
                       <div className="text-right">
                         <p className="text-2xl font-bold text-red-600">
                           {formatIndianCurrency(expense.amount)}
                         </p>
                       </div>
-                      
+
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleEdit(expense)}
@@ -255,10 +262,9 @@ const ViewExpenses: React.FC = () => {
           <div className="text-gray-400 text-6xl mb-4">📝</div>
           <h3 className="text-xl font-semibold text-gray-600 mb-2">No expenses found</h3>
           <p className="text-gray-500">
-            {searchTerm || categoryFilter || dateFilter 
-              ? "Try adjusting your filters to see more results"
-              : "Start by adding your first expense!"
-            }
+            {searchTerm || categoryFilter || dateFilter
+              ? 'Try adjusting your filters to see more results'
+              : 'Start by adding your first expense!'}
           </p>
         </div>
       )}

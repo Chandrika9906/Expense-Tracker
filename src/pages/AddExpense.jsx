@@ -4,7 +4,7 @@ import { formatIndianCurrency, getCategoryIcon } from '../utils/currency';
 import { PlusCircle, Calculator } from 'lucide-react';
 import NotificationToast from '../components/NotificationToast';
 
-const AddExpense: React.FC = () => {
+const AddExpense = () => {
   const { state, addExpense } = useExpenses();
   const [formData, setFormData] = useState({
     amount: '',
@@ -12,12 +12,12 @@ const AddExpense: React.FC = () => {
     category: '',
     date: new Date().toISOString().split('T')[0]
   });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [calculatorMode, setCalculatorMode] = useState(false);
 
   const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors = {};
 
     if (!formData.amount || isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
       newErrors.amount = 'Please enter a valid amount';
@@ -36,7 +36,7 @@ const AddExpense: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (validateForm()) {
@@ -60,7 +60,7 @@ const AddExpense: React.FC = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
@@ -75,7 +75,7 @@ const AddExpense: React.FC = () => {
     '0', '.', 'C', '+'
   ];
 
-  const handleCalculatorClick = (value: string) => {
+  const handleCalculatorClick = (value) => {
     if (value === 'C') {
       setFormData(prev => ({ ...prev, amount: '' }));
     } else if (['+', '-', '*', '/'].includes(value)) {

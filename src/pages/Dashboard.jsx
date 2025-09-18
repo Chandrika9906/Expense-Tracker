@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
 import { formatIndianCurrency, getCategoryColor, getCategoryIcon } from '../utils/currency';
-import { getCurrentMonth, getCurrentYear } from '../utils/dateUtils';
+import { getCurrentYear } from '../utils/dateUtils';
 import { TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-react';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { state } = useExpenses();
 
   const stats = useMemo(() => {
@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
     const categoryTotals = state.expenses.reduce((acc, expense) => {
       acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
       return acc;
-    }, {} as { [key: string]: number });
+    }, {});
 
     const topCategories = Object.entries(categoryTotals)
       .sort(([, a], [, b]) => b - a)

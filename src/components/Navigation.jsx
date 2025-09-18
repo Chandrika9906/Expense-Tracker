@@ -1,12 +1,7 @@
 import React from 'react';
 import { Home, Plus, List, BarChart3 } from 'lucide-react';
 
-interface NavigationProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
-}
-
-const Navigation: React.FC<NavigationProps> = ({ currentPage, onPageChange }) => {
+const Navigation = ({ currentPage, onPageChange }) => {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'add', label: 'Add Expense', icon: Plus },
